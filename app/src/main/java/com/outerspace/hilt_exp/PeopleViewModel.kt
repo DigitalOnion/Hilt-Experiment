@@ -13,8 +13,8 @@ import kotlinx.coroutines.launch
 
 const val PEOPLE_DATABASE_NAME = "people-database"
 
-class PeopleViewModel(application: Application): AndroidViewModel(application), PeopleRepoInterface {
-    private val dao: PeopleRepositoryDao
+class PeopleViewModel(application: Application): AndroidViewModel(application) {
+    val dao: PeopleRepositoryDao
     init {
         dao = Room.databaseBuilder(
             application.applicationContext,
@@ -46,11 +46,4 @@ class PeopleViewModel(application: Application): AndroidViewModel(application), 
             return PeopleViewModel(application) as T
         }
     }
-
-    override suspend fun addPerson(person: PersonEntity) = dao.addPerson(person)
-    override suspend fun getPerson(id: Int): PersonEntity = dao.getPerson(id)
-    override suspend fun countPeople(): Int = dao.countPeople()
-    override suspend fun getAll(): List<PersonEntity> = dao.getAll()
-    override suspend fun deletePerson(id: Int) = dao.deletePerson(id)
-    override suspend fun deleteAll() = dao.deleteAll()
 }

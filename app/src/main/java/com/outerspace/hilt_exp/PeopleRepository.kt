@@ -9,24 +9,24 @@ import androidx.room.RoomDatabase
 const val PEOPLE_DATABASE_VERSION = 1
 
 @Dao
-interface PeopleRepositoryDao: PeopleRepoInterface {
+interface PeopleRepositoryDao {
     @Insert
-    override suspend fun addPerson(person: PersonEntity)
+    suspend fun addPerson(person: PersonEntity)
 
     @Query("Select * from persons where id = :id")
-    override suspend fun getPerson(id: Int): PersonEntity
+    suspend fun getPerson(id: Int): PersonEntity
 
     @Query("Select count(*) from persons")
-    override suspend fun countPeople(): Int
+    suspend fun countPeople(): Int
 
     @Query("Select * from persons")
-    override suspend fun getAll(): List<PersonEntity>
+    suspend fun getAll(): List<PersonEntity>
 
     @Query("Delete from persons where id = :id")
-    override suspend fun deletePerson(id: Int)
+    suspend fun deletePerson(id: Int)
 
     @Query("Delete from persons")
-    override suspend fun deleteAll()
+    suspend fun deleteAll()
 }
 
 @Database(entities = [PersonEntity::class], version = PEOPLE_DATABASE_VERSION, exportSchema = false)

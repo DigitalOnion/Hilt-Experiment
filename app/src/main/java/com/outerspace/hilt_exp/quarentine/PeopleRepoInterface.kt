@@ -1,4 +1,6 @@
-package com.outerspace.hilt_exp
+package com.outerspace.hilt_exp.quarentine
+
+import com.outerspace.hilt_exp.PersonEntity
 
 interface PeopleRepoInterface {
     suspend fun addPerson(person: PersonEntity)

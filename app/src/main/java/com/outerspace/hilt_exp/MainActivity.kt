@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
 
         suspend fun getPeople(): List<PersonEntity> {
             return lifecycleScope.async(Dispatchers.IO) {
-                peopleVM.getAll()
+                peopleVM.dao.getAll()
             }.await()
         }
 
