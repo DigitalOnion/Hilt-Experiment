@@ -7,16 +7,12 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Inject
-import javax.inject.Singleton
 
 const val PEOPLE_DATABASE_NAME = "people-database"
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 object PeopleRepoModule {
-    @Singleton
     @Provides
     fun providePeopleDatabase(@ApplicationContext appContext: Context): PeopleDatabase =
         Room.databaseBuilder(
@@ -25,7 +21,6 @@ object PeopleRepoModule {
             PEOPLE_DATABASE_NAME
         ).build()
 
-    @Singleton
     @Provides
     fun providePeopleDao(db: PeopleDatabase) = db.peopleDao()
 }
