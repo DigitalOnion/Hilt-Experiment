@@ -26,10 +26,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.lifecycleScope
 import com.outerspace.hilt_exp.ui.theme.HiltExperimentTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private lateinit var peopleVM: PeopleViewModel
@@ -37,12 +39,18 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val peopleVMFactory = PeopleViewModel.Factory(application)
-        peopleVM = ViewModelProvider(this as ViewModelStoreOwner, peopleVMFactory)[PeopleViewModel::class.java]
+        peopleVM = ViewModelProvider(this as ViewModelStoreOwner)[PeopleViewModel::class.java]
 
         suspend fun getPeople(): List<PersonEntity> {
+            val n = peopleVM.countPeople()
+            if (n == 0) {
+                for(person in peopleVM.testPeopleList()) {
+                    peopleVM.addPerson(person)
+                }
+            }
+
             return lifecycleScope.async(Dispatchers.IO) {
-                peopleVM.dao.getAll()
+                peopleVM.getAll()
             }.await()
         }
 
