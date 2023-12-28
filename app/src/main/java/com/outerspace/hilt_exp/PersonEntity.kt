@@ -10,10 +10,19 @@ enum class GenderEnum {
 
 @Entity(tableName = "persons")
 data class PersonEntity (
-    @PrimaryKey val id: Int?,
-    @ColumnInfo(name = "first_name", defaultValue = "unknown") val firstName: String,
-    @ColumnInfo(name = "last_name", defaultValue = "unknown") val lastName: String,
-    @ColumnInfo(name = "gender", defaultValue = "UNSPECIFIED") val gender: GenderEnum,
+    @PrimaryKey var id: Int?,
+    @ColumnInfo(name = "first_name", defaultValue = "unknown") var firstName: String,
+    @ColumnInfo(name = "last_name", defaultValue = "unknown") var lastName: String,
+    @ColumnInfo(name = "gender", defaultValue = "UNSPECIFIED") var gender: GenderEnum,
 ) {
     fun fullName(): String = "$firstName $lastName"
+
+    override fun equals(other: Any?): Boolean {
+        return if (other == null || other !is PersonEntity)
+            false
+        else
+            this.firstName == other.firstName &&
+            this.lastName == other.lastName &&
+            this.gender == other.gender
+    }
 }
