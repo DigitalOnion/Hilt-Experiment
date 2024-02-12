@@ -49,14 +49,8 @@ class MainActivity : ComponentActivity() {
 
         peopleVM = ViewModelProvider(this as ViewModelStoreOwner)[PeopleViewModel::class.java]
 
-        val originalPetSupply = mutableListOf<PersonEntity>(
-            PersonEntity(null, "Bimbo", "Virueña Chávez", GenderEnum.FURRY),
-            PersonEntity(null, "Hela", "Virueña Chávez", GenderEnum.FURRY),
-            PersonEntity(null, "Toy", "Virueña Chávez", GenderEnum.FURRY)
-        )
-
         val petSupply: MutableList<PersonEntity> = mutableListOf()
-        petSupply.addAll(originalPetSupply)
+        petSupply.addAll(peopleVM.testPetList())
 
         suspend fun getPeople(): List<PersonEntity> {
             val n = peopleVM.countPeople()
@@ -96,7 +90,7 @@ class MainActivity : ComponentActivity() {
                                 petSupply.remove(pet)
                                 peopleVM.addPerson(pet)
                             } else {
-                                petSupply.addAll(originalPetSupply)
+                                petSupply.addAll(peopleVM.testPetList())
                                 peopleVM.deleteAll()
                             }
                             addPetsState.value = false
@@ -122,7 +116,6 @@ class MainActivity : ComponentActivity() {
                             Text(stringResource(R.string.add_pets))
                         }
                     }
-
                 }
             }
         }

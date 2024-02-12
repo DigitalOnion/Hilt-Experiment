@@ -24,4 +24,12 @@ class PeopleViewModel
             PersonEntity(null, "Sofi", "Virueña Chávez", GenderEnum.LGTB),
         )
     }
+
+    fun testPetList(): List<PersonEntity> {
+        return listOf(
+            PersonEntity(null, "Bimbo", "Virueña Chávez", GenderEnum.FURRY),
+            PersonEntity(null, "Hela", "Virueña Chávez", GenderEnum.FURRY),
+            PersonEntity(null, "Toy", "Virueña Silva", GenderEnum.FURRY)
+        )
+    }
 }

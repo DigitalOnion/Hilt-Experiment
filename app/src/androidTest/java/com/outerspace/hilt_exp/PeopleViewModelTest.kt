@@ -53,21 +53,4 @@ class PeopleViewModelTest {
         val person2 = peopleVM.getPerson(2)
         assertTrue("getPerson returned the wrong person", persons[1]==person2)
     }
-
-    // the rest... I will do later, this is only an exercise
-//    @Test
-//    fun getAllTest() = runTest {
-//
-//    }
-//
-//    @Test
-//    fun deletePersonTest() = runTest {
-//
-//    }
-//
-//    @Test
-//    fun deleteAllTest() = runTest {
-//
-//    }
-
 }
