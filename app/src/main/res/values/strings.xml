@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Hilt Experiment</string>
+
+    <string name="add_pets">Add Pets to the Family</string>
 </resources>
