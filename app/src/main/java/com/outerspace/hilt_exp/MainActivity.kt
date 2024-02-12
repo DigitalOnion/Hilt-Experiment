@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,6 +39,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+
+const val LIST_OF_PERSONS = "list-of-persons"
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -49,16 +53,14 @@ class MainActivity : ComponentActivity() {
 
         peopleVM = ViewModelProvider(this as ViewModelStoreOwner)[PeopleViewModel::class.java]
 
+        lifecycleScope.launch(Dispatchers.IO) {
+            peopleVM.initializePeopleTable()
+        }
+
         val petSupply: MutableList<PersonEntity> = mutableListOf()
         petSupply.addAll(peopleVM.testPetList())
 
         suspend fun getPeople(): List<PersonEntity> {
-            val n = peopleVM.countPeople()
-            if (n == 0) {
-                for(person in peopleVM.testPeopleList()) {
-                    peopleVM.addPerson(person)
-                }
-            }
             return lifecycleScope.async(Dispatchers.IO) {
                 peopleVM.getAll()
             }.await()
@@ -90,8 +92,8 @@ class MainActivity : ComponentActivity() {
                                 petSupply.remove(pet)
                                 peopleVM.addPerson(pet)
                             } else {
+                                peopleVM.initializePeopleTable()
                                 petSupply.addAll(peopleVM.testPetList())
-                                peopleVM.deleteAll()
                             }
                             addPetsState.value = false
                             refreshList.value = true
@@ -101,7 +103,9 @@ class MainActivity : ComponentActivity() {
                     Column(
                         modifier = modifier.fillMaxSize()
                     ) {
-                        LazyColumn {
+                        LazyColumn (
+                            modifier = modifier.testTag(LIST_OF_PERSONS)
+                        ) {
                             items(listState.value) { person ->
                                 Text(text = person.fullName(), modifier = modifier, fontSize = 24.sp)
                             }
