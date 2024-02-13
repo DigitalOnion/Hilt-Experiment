@@ -28,6 +28,9 @@ interface PeopleDao {
 
     @Query("Delete from persons")
     suspend fun deleteAll()
+
+    @Query("Delete from persons where gender = :gender")
+    suspend fun deleteGender(gender: GenderEnum)
 }
 
 @Database(entities = [PersonEntity::class], version = PEOPLE_DATABASE_VERSION, exportSchema = false)
@@ -44,4 +47,5 @@ class PeopleRepository @Inject constructor(
     suspend fun getAll(): List<PersonEntity> = dao.getAll()
     suspend fun deletePerson(id: Int) = dao.deletePerson(id)
     suspend fun deleteAll() = dao.deleteAll()
+    suspend fun deleteGender(gender: GenderEnum) = dao.deleteGender(gender)
 }

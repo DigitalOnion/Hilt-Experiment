@@ -30,6 +30,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.lifecycleScope
@@ -48,23 +49,25 @@ class MainActivity : ComponentActivity() {
 
     private lateinit var peopleVM: PeopleViewModel
 
+    suspend fun getPeople(): List<PersonEntity> {
+        return lifecycleScope.async(Dispatchers.IO) {
+            peopleVM.getAll()
+        }.await()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         peopleVM = ViewModelProvider(this as ViewModelStoreOwner)[PeopleViewModel::class.java]
 
         lifecycleScope.launch(Dispatchers.IO) {
-            peopleVM.initializePeopleTable()
+            if (peopleVM.countPeople() == 0) {
+                peopleVM.initializePeopleTable()
+            }
         }
 
         val petSupply: MutableList<PersonEntity> = mutableListOf()
         petSupply.addAll(peopleVM.testPetList())
-
-        suspend fun getPeople(): List<PersonEntity> {
-            return lifecycleScope.async(Dispatchers.IO) {
-                peopleVM.getAll()
-            }.await()
-        }
 
         setContent {
             HiltExperimentTheme {
@@ -92,7 +95,7 @@ class MainActivity : ComponentActivity() {
                                 petSupply.remove(pet)
                                 peopleVM.addPerson(pet)
                             } else {
-                                peopleVM.initializePeopleTable()
+                                peopleVM.deleteGender(GenderEnum.FURRY)
                                 petSupply.addAll(peopleVM.testPetList())
                             }
                             addPetsState.value = false

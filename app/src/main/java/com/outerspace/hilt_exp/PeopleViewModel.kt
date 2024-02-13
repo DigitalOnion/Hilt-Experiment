@@ -1,5 +1,6 @@
 package com.outerspace.hilt_exp
 
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,22 +15,13 @@ class PeopleViewModel
     @Inject constructor(private val peopleRepository: PeopleRepository)
     :ViewModel() {
 
-    val livePersonAdded = MutableLiveData<PersonEntity>()
-
-    suspend fun addPerson(person: PersonEntity) {
-        peopleRepository.addPerson(person)
-        if (livePersonAdded.hasObservers()) {
-            viewModelScope.launch(Dispatchers.Main) {
-                livePersonAdded.value = person
-            }
-        }
-    }
-
+    suspend fun addPerson(person: PersonEntity) = peopleRepository.addPerson(person)
     suspend fun getPerson(id: Int): PersonEntity = peopleRepository.getPerson(id)
     suspend fun countPeople(): Int = peopleRepository.countPeople()
     suspend fun getAll(): List<PersonEntity> = peopleRepository.getAll()
     suspend fun deletePerson(id: Int) = peopleRepository.deletePerson(id)
     suspend fun deleteAll() = peopleRepository.deleteAll()
+    suspend fun deleteGender(gender: GenderEnum) = peopleRepository.deleteGender(gender)
 
     suspend fun initializePeopleTable() {
         deleteAll()
